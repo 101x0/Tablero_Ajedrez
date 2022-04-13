@@ -6,7 +6,6 @@ let blancas = ['♙', '♖', '♘', '♗', '♕', '♔'];
 let negras = ["♟", "♜", "♞", "♝", "♛", "♚"];
 let piezaOrigen;
 let piezaDestino;
-let ficha;
 let casilla;
 
 for (let c = 0; c < casillas.length; c++) {
@@ -18,14 +17,15 @@ for (let c = 0; c < casillas.length; c++) {
 }
 
 function dragstart(e) {
+    if (seleccionado) casillaSeleccionada.style.color = "black";
+
+    seleccionado = false;
     e.dataTransfer.setData('pieza', e.target.innerHTML);
     casilla = e.target;
     casilla.style.color = "purple";
-    if (blancas.includes(e.target.innerText)) {
-        piezaOrigen = "blanca";
-    } else if (negras.includes(e.target.innerText)) {
-        piezaOrigen = "negra";
-    }
+
+    if (blancas.includes(e.target.innerText)) piezaOrigen = "blanca";
+    else if (negras.includes(e.target.innerText)) piezaOrigen = "negra";
 }
 
 function dragover(e) {
@@ -34,11 +34,9 @@ function dragover(e) {
 
 function drop(e) {
     if (casilla != e.target) {
-        if (blancas.includes(e.target.innerText)) {
-            piezaDestino = "blanca";
-        } else if (negras.includes(e.target.innerText)) {
-            piezaDestino = "negra";
-        }
+        if (blancas.includes(e.target.innerText)) piezaDestino = "blanca";
+        else if (negras.includes(e.target.innerText)) piezaDestino = "negra";
+
         if (piezaOrigen != piezaDestino) {
             pieza = e.dataTransfer.getData('pieza');
             e.target.innerHTML = pieza;
@@ -46,52 +44,38 @@ function drop(e) {
             casilla.innerHTML = "";
             e.target.id = "pieza";
             e.target.draggable = true;
-        } else {
-            piezaDestino = "";
-        }
+        } else piezaDestino = "";
     }
     casilla.style.color = "black";
 }
 
 function seleccion(evento) {
-    if (seleccionado) {                                 
+    if (seleccionado) {
         if (evento.target != casillaSeleccionada) {
-            if (blancas.includes(evento.target.innerText)) {
-                piezaDestino = "blanca";
-            } else if (negras.includes(evento.target.innerText)) {
-                piezaDestino = "negra";
-            }
-            if (piezaOrigen != piezaDestino) { 
+            if (blancas.includes(evento.target.innerText)) piezaDestino = "blanca";
+            else if (negras.includes(evento.target.innerText)) piezaDestino = "negra";
+
+            if (piezaOrigen != piezaDestino) {
                 evento.target.innerHTML = pieza;
-                evento.target.style.color = "black";
                 casillaSeleccionada.innerHTML = "";
-                seleccionado = false;
                 casillaSeleccionada.draggable = false;
                 evento.target.draggable = true;
-            } else {
-                casillaSeleccionada.style.color = "black";
-                seleccionado = false;
-                casillaSeleccionada = "";
-                pieza = "";
-                piezaDestino = "";
             }
-        } else {                                        
-            casillaSeleccionada.style.color = "black";
-            seleccionado = false;
+            pieza = "";
+            piezaDestino = "";
         }
-    } else {                                            
-        if (evento.target.innerHTML != "") {           
+        casillaSeleccionada.style.color = "black";
+        casillaSeleccionada = "";
+        seleccionado = false;
+    } else {
+        if (evento.target.innerHTML != "") {
             casillaSeleccionada = evento.target;
             casillaSeleccionada.style.color = "red";
             seleccionado = true;
             pieza = evento.target.innerHTML;
-            if (blancas.includes(evento.target.innerText)) {
-                piezaOrigen = "blanca";
-            } else if (negras.includes(evento.target.innerText)) {
-                piezaOrigen = "negra";
-            }
+            
+            if (blancas.includes(evento.target.innerText)) piezaOrigen = "blanca";
+            else if (negras.includes(evento.target.innerText)) piezaOrigen = "negra";
         }
     }
 }
-
-
